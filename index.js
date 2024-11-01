@@ -16,12 +16,13 @@ const client = new Client({
 });
 
 client.on('qr', (qr) => {
-    // حفظ QR كصورة
-    qrcode.toFile('QR.png', qr, (err) => {
+    // تحويل رمز QR إلى Base64
+    qrcode.toDataURL(qr, (err, url) => {
         if (err) {
-            console.error("فشل في حفظ رمز QR:", err);
+            console.error("فشل في توليد رمز QR:", err);
         } else {
-            console.log("تم حفظ رمز QR كصورة. افتح الملف 'QR.png' لمسحه ضوئيًا.");
+            console.log("انسخ هذا الرابط وافتحه لمسح QR:");
+            console.log(url);
         }
     });
 });
@@ -32,7 +33,6 @@ client.on('ready', () => {
 
 client.on('message', message => {
     console.log(`تم استقبال الرسالة: ${message.body}`);
-    // معالجة الرسالة والرد
     const replyMessage = handleMessage(message.body);
     message.reply(replyMessage);
 });
@@ -44,17 +44,14 @@ function handleMessage(message) {
     } else if (message === 'مساعدة') {
         return 'كيف يمكنني مساعدتك اليوم؟';
     } else if (message.startsWith('!echo ')) {
-        return message.slice(6); // إرجاع النص بعد !echo
+        return message.slice(6);
     } else {
         return 'عذرًا، لم أفهم. يمكنك طلب المساعدة بكتابة "مساعدة".';
     }
 }
 
-// حفظ بيانات الجلسة
 client.on('authenticated', (session) => {
     console.log('تم التحقق بنجاح!');
-
-    // التأكد من أن بيانات الجلسة غير فارغة
     if (session) {
         fs.writeFile(SESSION_FILE_PATH, JSON.stringify(session))
             .then(() => {
@@ -66,5 +63,4 @@ client.on('authenticated', (session) => {
     }
 });
 
-// بدء تشغيل البوت
 client.initialize();
