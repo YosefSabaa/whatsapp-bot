@@ -30,8 +30,8 @@ client.on('message', message => {
 });
 
 function handleMessage(message) {
-    if (message === 'ping') {
-        return 'pong';
+    if (message === 'السلام عليكم') {
+        return 'عليك السلام ورحمةالله وبركاته. شكراً لتواصلك معنا 🥰';
     } else if (message === 'مساعدة') {
         return 'كيف يمكنني مساعدتك اليوم؟';
     } else if (message.startsWith('!echo ')) {
