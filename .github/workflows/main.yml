@@ -1,0 +1,24 @@
+name: WhatsApp Bot
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "0 * * * *" # تشغيل البوت مرة كل ساعة (يمكنك تعديل التكرار حسب الحاجة)
+
+jobs:
+  run-bot:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '14'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Run WhatsApp Bot
+        run: npm start
