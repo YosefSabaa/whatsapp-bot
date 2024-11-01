@@ -21,6 +21,7 @@ client.on('qr', (qr) => {
 
 client.on('ready', () => {
     console.log('Bot is ready!');
+    console.log('Session data loaded:', sessionData ? 'Yes' : 'No');
 });
 
 client.on('message', message => {
