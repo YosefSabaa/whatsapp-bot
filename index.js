@@ -2,7 +2,7 @@ const { Client } = require('whatsapp-web.js');
 const qrcode = require('qrcode');
 const fs = require('fs-extra');
 
-// مسار ملف الجلسة
+// ملف لتخزين بيانات الجلسة
 const SESSION_FILE_PATH = './session.json';
 let sessionData;
 
@@ -16,25 +16,27 @@ const client = new Client({
 });
 
 client.on('qr', (qr) => {
-    // تحويل رمز QR إلى Base64
-    qrcode.toDataURL(qr, (err, url) => {
+    // حفظ QR Code كصورة PNG
+    qrcode.toFile('./QR.png', qr, {
+        errorCorrectionLevel: 'H'
+    }, (err) => {
         if (err) {
-            console.error("فشل في توليد رمز QR:", err);
+            console.error('Error saving QR code:', err);
         } else {
-            console.log("انسخ هذا الرابط وافتحه لمسح QR:");
-            console.log(url);
+            console.log('QR code saved as QR.png');
         }
     });
 });
 
 client.on('ready', () => {
-    console.log('البوت جاهز!');
+    console.log('Bot is ready!');
 });
 
 client.on('message', message => {
-    console.log(`تم استقبال الرسالة: ${message.body}`);
+    console.log(`Received message: ${message.body}`);
+    // معالجة الرسالة
     const replyMessage = handleMessage(message.body);
-    message.reply(replyMessage);
+    message.reply(replyMessage); // إرسال الرد المناسب
 });
 
 // وظيفة لمعالجة الرسائل
@@ -44,23 +46,27 @@ function handleMessage(message) {
     } else if (message === 'مساعدة') {
         return 'كيف يمكنني مساعدتك اليوم؟';
     } else if (message.startsWith('!echo ')) {
-        return message.slice(6);
+        return message.slice(6); // إرجاع النص بعد !echo
     } else {
-        return 'عذرًا، لم أفهم. يمكنك طلب المساعدة بكتابة "مساعدة".';
+        return 'عذرًا، لم أفهم. يمكنك طلب المساعدة بكتابة "مساعدة".'; // الرد عند عدم الفهم
     }
 }
 
+// حفظ بيانات الجلسة
 client.on('authenticated', (session) => {
-    console.log('تم التحقق بنجاح!');
+    console.log('Authenticated successfully!');
+
+    // التأكد من أن بيانات الجلسة غير فارغة
     if (session) {
-        fs.writeFile(SESSION_FILE_PATH, JSON.stringify(session))
+        fs.writeFile(SESSION_FILE_PATH, JSON.stringify(session)) // حفظ بيانات الجلسة في ملف
             .then(() => {
-                console.log('تم حفظ بيانات الجلسة!');
+                console.log('Session data saved!');
             })
-            .catch(err => console.error('خطأ في حفظ بيانات الجلسة:', err));
+            .catch(err => console.error('Error saving session data:', err));
     } else {
-        console.error('بيانات الجلسة فارغة، لن يتم الحفظ.');
+        console.error('Session data is empty, not saving.');
     }
 });
 
+// بدء تشغيل البوت
 client.initialize();
