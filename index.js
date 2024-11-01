@@ -1,11 +1,11 @@
 const { Client } = require('whatsapp-web.js');
 const fs = require('fs-extra');
 
-// ملف لتخزين بيانات الجلسة
+// مسار ملف الجلسة
 const SESSION_FILE_PATH = './session.json';
 let sessionData;
 
-// قراءة بيانات الجلسة إذا كان موجودًا
+// قراءة بيانات الجلسة إذا كانت موجودة
 if (fs.existsSync(SESSION_FILE_PATH)) {
     sessionData = require(SESSION_FILE_PATH);
 }
@@ -16,7 +16,7 @@ const client = new Client({
 
 client.on('qr', (qr) => {
     console.log('QR Code received, scan it!');
-    console.log(qr); // طباعة رمز QR كنص حتى يمكن مسحه ضوئيًا
+    console.log(qr); // طباعة رمز QR كنص لمسحه ضوئيًا
 });
 
 client.on('ready', () => {
@@ -35,7 +35,7 @@ function handleMessage(message) {
     } else if (message === 'مساعدة') {
         return 'كيف يمكنني مساعدتك؟ الرجاء إرسال رقم ما تريد الاستفسار عنه:\n١- مواعيد العمل\n٢- طباعة ملفات\n٣- التواصل معنا';
     } else if (message === '1') {
-        return 'مواعيد العمل هي \n كل يوم من الساعة 10 A.M الي الساعة 11 P.M';
+        return 'مواعيد العمل هي\nكل يوم من الساعة 10 A.M الي الساعة 11 P.M';
     } else if (message.startsWith('!echo ')) {
         return message.slice(6);
     } else {
@@ -46,17 +46,13 @@ function handleMessage(message) {
 client.on('authenticated', (session) => {
     console.log('Authenticated successfully!');
     // حفظ بيانات الجلسة في الملف
-    fs.writeFile(SESSION_FILE_PATH, JSON.stringify(session))
-        .then(() => {
-            console.log('Session data saved!');
-        })
-        .catch(err => console.error('Error saving session data:', err));
+    fs.writeFileSync(SESSION_FILE_PATH, JSON.stringify(session));
+    console.log('Session data saved!');
 });
 
-// إعادة تحميل بيانات الجلسة عند كل بدء
 client.on('disconnected', (reason) => {
     console.log('Client was logged out:', reason);
-    fs.remove(SESSION_FILE_PATH); // احذف الجلسة عند تسجيل الخروج
+    fs.removeSync(SESSION_FILE_PATH); // احذف الجلسة عند تسجيل الخروج
 });
 
 client.initialize();
