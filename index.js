@@ -1,5 +1,5 @@
 const { Client } = require('whatsapp-web.js');
-const qrcode = require('qrcode');
+const qrcode = require('qrcode-terminal');
 const fs = require('fs-extra');
 
 // ملف لتخزين بيانات الجلسة
@@ -16,16 +16,8 @@ const client = new Client({
 });
 
 client.on('qr', (qr) => {
-    // حفظ QR Code كصورة PNG
-    qrcode.toFile('./QR.png', qr, {
-        errorCorrectionLevel: 'H'
-    }, (err) => {
-        if (err) {
-            console.error('Error saving QR code:', err);
-        } else {
-            console.log('QR code saved as QR.png');
-        }
-    });
+    // طباعة QR Code في وحدة التحكم
+    qrcode.generate(qr, { small: true });
 });
 
 client.on('ready', () => {
