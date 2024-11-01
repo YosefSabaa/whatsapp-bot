@@ -31,7 +31,7 @@ client.on('message', message => {
 
 function handleMessage(message) {
     if (message === 'السلام عليكم') {
-        return 'عليك السلام ورحمةالله وبركاته. شكراً لتواصلك معنا 🥰';
+        return 'عليك السلام ورحمة الله وبركاته. شكراً لتواصلك معنا 🥰';
     } else if (message === 'مساعدة') {
         return 'كيف يمكنني مساعدتك اليوم؟';
     } else if (message.startsWith('!echo ')) {
@@ -43,15 +43,18 @@ function handleMessage(message) {
 
 client.on('authenticated', (session) => {
     console.log('Authenticated successfully!');
-    if (session) {
-        fs.writeFile(SESSION_FILE_PATH, JSON.stringify(session))
-            .then(() => {
-                console.log('Session data saved!');
-            })
-            .catch(err => console.error('Error saving session data:', err));
-    } else {
-        console.error('Session data is empty, not saving.');
-    }
+    // حفظ بيانات الجلسة في الملف
+    fs.writeFile(SESSION_FILE_PATH, JSON.stringify(session))
+        .then(() => {
+            console.log('Session data saved!');
+        })
+        .catch(err => console.error('Error saving session data:', err));
+});
+
+// إعادة تحميل بيانات الجلسة عند كل بدء
+client.on('disconnected', (reason) => {
+    console.log('Client was logged out:', reason);
+    fs.remove(SESSION_FILE_PATH); // احذف الجلسة عند تسجيل الخروج
 });
 
 client.initialize();
