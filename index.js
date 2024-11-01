@@ -31,9 +31,9 @@ client.on('message', message => {
 
 function handleMessage(message) {
     if (message === 'السلام عليكم') {
-        return 'عليك السلام ورحمة الله وبركاته. شكراً لتواصلك معنا 🥰';
+        return 'عليك السلام ورحمة الله وبركاته.\nشكراً لتواصلك معنا.\nيمكنك إرسال "مساعدة" لمعرفة المزيد من التفاصيل.';
     } else if (message === 'مساعدة') {
-        return 'كيف يمكنني مساعدتك اليوم؟';
+        return 'كيف يمكنني مساعدتك؟ الرجاء إرسال رقم ما تريد الاستفسار عنه:\n١- مواعيد العمل\n٢- طباعة ملفات\n٣- التواصل معنا';
     } else if (message.startsWith('!echo ')) {
         return message.slice(6);
     } else {
