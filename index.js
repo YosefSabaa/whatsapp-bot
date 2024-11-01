@@ -1,4 +1,5 @@
 const { Client } = require('whatsapp-web.js');
+const qrcode = require('qrcode-terminal');
 const fs = require('fs-extra');
 
 // ملف لتخزين بيانات الجلسة
@@ -15,8 +16,8 @@ const client = new Client({
 });
 
 client.on('qr', (qr) => {
-    console.log('QR Code received, scan it!');
-    console.log(qr); // طباعة رمز QR كنص حتى يمكن مسحه ضوئيًا
+    // طباعة QR Code في الطرفية
+    qrcode.generate(qr, { small: true });
 });
 
 client.on('ready', () => {
@@ -25,26 +26,30 @@ client.on('ready', () => {
 
 client.on('message', message => {
     console.log(`Received message: ${message.body}`);
+    // معالجة الرسالة
     const replyMessage = handleMessage(message.body);
-    message.reply(replyMessage);
+    message.reply(replyMessage); // إرسال الرد المناسب
 });
 
+// وظيفة لمعالجة الرسائل
 function handleMessage(message) {
     if (message === 'ping') {
         return 'pong';
     } else if (message === 'مساعدة') {
         return 'كيف يمكنني مساعدتك اليوم؟';
     } else if (message.startsWith('!echo ')) {
-        return message.slice(6);
+        return message.slice(6); // إرجاع النص بعد !echo
     } else {
-        return 'عذرًا، لم أفهم. يمكنك طلب المساعدة بكتابة "مساعدة".';
+        return 'عذرًا، لم أفهم. يمكنك طلب المساعدة بكتابة "مساعدة".'; // الرد عند عدم الفهم
     }
 }
 
+// حفظ بيانات الجلسة
 client.on('authenticated', (session) => {
     console.log('Authenticated successfully!');
+
     if (session) {
-        fs.writeFile(SESSION_FILE_PATH, JSON.stringify(session))
+        fs.writeFile(SESSION_FILE_PATH, JSON.stringify(session)) // حفظ بيانات الجلسة في ملف
             .then(() => {
                 console.log('Session data saved!');
             })
@@ -54,4 +59,5 @@ client.on('authenticated', (session) => {
     }
 });
 
+// بدء تشغيل البوت
 client.initialize();
