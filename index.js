@@ -15,9 +15,11 @@ const client = new Client({
     session: sessionData
 });
 
+// عند الحصول على QR Code
 client.on('qr', (qr) => {
-    // طباعة QR Code في وحدة التحكم
-    qrcode.generate(qr, { small: true });
+    // طباعة QR Code في الطرفية بشكل واضح
+    console.log('QR Code received, scan it:');
+    qrcode.generate(qr, { small: false }); // اجعل small: false لعرضه أكبر
 });
 
 client.on('ready', () => {
