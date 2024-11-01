@@ -7,13 +7,12 @@
     "start": "node index.js"
   },
   "dependencies": {
-    "whatsapp-web.js": "^1.20.0",
-    "qrcode-terminal": "^1.0.0",
+    "whatsapp-web.js": "^1.26.0",
     "fs-extra": "^10.0.0"
   },
   "author": "Your Name",
   "license": "ISC",
   "engines": {
-    "node": ">=14.0.0"
+    "node": ">=18.0.0"
   }
 }
