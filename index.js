@@ -15,18 +15,15 @@ const client = new Client({
     session: sessionData
 });
 
-// حدث عند استلام رمز QR
 client.on('qr', (qr) => {
     // طباعة QR Code في الطرفية
     qrcode.generate(qr, { small: true });
 });
 
-// حدث عند جاهزية البوت
 client.on('ready', () => {
     console.log('Bot is ready!');
 });
 
-// حدث عند استلام رسالة
 client.on('message', message => {
     console.log(`Received message: ${message.body}`);
     // معالجة الرسالة
