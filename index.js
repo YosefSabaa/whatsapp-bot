@@ -37,7 +37,7 @@ function handleMessage(message) {
         return 'عليك السلام ورحمة الله وبركاته.\nشكراً لتواصلك معنا.\nيمكنك إرسال "مساعدة" لمعرفة المزيد من التفاصيل.';
     } else if (message === 'مساعدة') {
         return 'كيف يمكنني مساعدتك؟ الرجاء إرسال رقم ما تريد الاستفسار عنه:\n١- مواعيد العمل\n٢- طباعة ملفات\n٣- التواصل معنا';
-    } else if (message === '1') {
+    } else if (message === '١') {
         return 'مواعيد العمل هي \n كل يوم من الساعة 10 A.M الي الساعة 11 P.M';
     } else if (message.startsWith('!echo ')) {
         return message.slice(6);
@@ -48,12 +48,16 @@ function handleMessage(message) {
 
 client.on('authenticated', (session) => {
     console.log('Authenticated successfully!');
-    // حفظ بيانات الجلسة في الملف
-    try {
-        fs.writeFileSync(SESSION_FILE_PATH, JSON.stringify(session));
-        console.log('Session data saved!');
-    } catch (err) {
-        console.error('Failed to save session data:', err);
+    // تحقق من صلاحية البيانات قبل الحفظ
+    if (session) {
+        try {
+            fs.writeFileSync(SESSION_FILE_PATH, JSON.stringify(session, null, 2));
+            console.log('Session data saved!');
+        } catch (err) {
+            console.error('Failed to save session data:', err);
+        }
+    } else {
+        console.error('Session data is undefined and cannot be saved.');
     }
 });
 
