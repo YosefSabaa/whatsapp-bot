@@ -7,7 +7,10 @@ let sessionData;
 
 // قراءة بيانات الجلسة إذا كانت موجودة
 if (fs.existsSync(SESSION_FILE_PATH)) {
+    console.log("Loading session data...");
     sessionData = require(SESSION_FILE_PATH);
+} else {
+    console.log("No session file found, will authenticate.");
 }
 
 const client = new Client({
@@ -46,8 +49,12 @@ function handleMessage(message) {
 client.on('authenticated', (session) => {
     console.log('Authenticated successfully!');
     // حفظ بيانات الجلسة في الملف
-    fs.writeFileSync(SESSION_FILE_PATH, JSON.stringify(session));
-    console.log('Session data saved!');
+    try {
+        fs.writeFileSync(SESSION_FILE_PATH, JSON.stringify(session));
+        console.log('Session data saved!');
+    } catch (err) {
+        console.error('Failed to save session data:', err);
+    }
 });
 
 client.on('disconnected', (reason) => {
