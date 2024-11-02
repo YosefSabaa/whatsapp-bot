@@ -1,6 +1,5 @@
 const { Client } = require('whatsapp-web.js');
 const fs = require('fs-extra');
-const qrcode = require('qrcode-terminal');
 
 // مسار ملف الجلسة
 const SESSION_FILE_PATH = './session.json';
@@ -16,7 +15,8 @@ const client = new Client({
 });
 
 client.on('qr', (qr) => {
-    qrcode.generate(qr, { small: true }); // عرض رمز QR في الطرفية
+    const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?data=${encodeURIComponent(qr)}&size=200x200`;
+    console.log('QR Code received, scan it at:', qrUrl);
 });
 
 client.on('ready', () => {
