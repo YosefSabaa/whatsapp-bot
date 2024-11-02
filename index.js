@@ -48,6 +48,7 @@ function handleMessage(message) {
 
 client.on('authenticated', (session) => {
     console.log('Authenticated successfully!');
+    console.log('Session data:', session); // سجل بيانات الجلسة لمعرفة المحتوى
     // تحقق من صلاحية البيانات قبل الحفظ
     if (session && typeof session === 'object') {
         try {
