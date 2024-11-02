@@ -1,5 +1,6 @@
 const { Client } = require('whatsapp-web.js');
 const fs = require('fs-extra');
+const qrcode = require('qrcode-terminal');
 
 // مسار ملف الجلسة
 const SESSION_FILE_PATH = './session.json';
@@ -15,8 +16,7 @@ const client = new Client({
 });
 
 client.on('qr', (qr) => {
-    console.log('QR Code received, scan it!');
-    console.log(qr); // طباعة رمز QR كنص لمسحه ضوئيًا
+    qrcode.generate(qr, { small: true }); // عرض رمز QR في الطرفية
 });
 
 client.on('ready', () => {
@@ -35,7 +35,7 @@ function handleMessage(message) {
     } else if (message === 'مساعدة') {
         return 'كيف يمكنني مساعدتك؟ الرجاء إرسال رقم ما تريد الاستفسار عنه:\n١- مواعيد العمل\n٢- طباعة ملفات\n٣- التواصل معنا';
     } else if (message === '1') {
-        return 'مواعيد العمل هي\nكل يوم من الساعة 10 A.M الي الساعة 11 P.M';
+        return 'مواعيد العمل هي \n كل يوم من الساعة 10 A.M الي الساعة 11 P.M';
     } else if (message.startsWith('!echo ')) {
         return message.slice(6);
     } else {
